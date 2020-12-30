@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Restaurant.Backend.Common.Extensions;
+using Restaurant.Backend.Entities.Context;
 
 namespace Restaurant.Backend.Account
 {
@@ -28,6 +30,10 @@ namespace Restaurant.Backend.Account
 
             // Add JwtAuthentication
             services.AddJwtAuthentication(Configuration.GetSection("AppSettings:Token").Value); // TODO: Get token from KeyVault
+
+            // Set configuration for Entity Framework
+            services.AddDbContext<AppDbContext>
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
