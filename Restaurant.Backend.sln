@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.Account", "Restaurant.Backend.Account\Restaurant.Backend.Account.csproj", "{7CA8E943-A070-48AE-B9CE-065F5701624D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Backend.Account", "Restaurant.Backend.Account\Restaurant.Backend.Account.csproj", "{7CA8E943-A070-48AE-B9CE-065F5701624D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.Account.Test", "Restaurant.Backend.Account.Test\Restaurant.Backend.Account.Test.csproj", "{E46C90C3-9BDB-49D4-88FB-4BE360EC3036}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Backend.Account.Test", "Restaurant.Backend.Account.Test\Restaurant.Backend.Account.Test.csproj", "{E46C90C3-9BDB-49D4-88FB-4BE360EC3036}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Account", "Account", "{B67E3705-740A-46FB-AAC5-AB7151D1BABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.CommonApi", "Restaurant.Backend.Common\Restaurant.Backend.CommonApi.csproj", "{9900AA10-6940-4A98-B005-3FCF27D92E07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Backend.CommonApi", "Restaurant.Backend.Common\Restaurant.Backend.CommonApi.csproj", "{9900AA10-6940-4A98-B005-3FCF27D92E07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7E292A04-846D-49D9-967A-280967160B1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Backend.Dto", "Restaurant.Backend.Dto\Restaurant.Backend.Dto.csproj", "{8F4612F6-BBEE-42EE-8A2F-791DB1491926}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.Entities", "Restaurant.Backend.Entities\Restaurant.Backend.Entities.csproj", "{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +35,14 @@ Global
 		{9900AA10-6940-4A98-B005-3FCF27D92E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9900AA10-6940-4A98-B005-3FCF27D92E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9900AA10-6940-4A98-B005-3FCF27D92E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F4612F6-BBEE-42EE-8A2F-791DB1491926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F4612F6-BBEE-42EE-8A2F-791DB1491926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F4612F6-BBEE-42EE-8A2F-791DB1491926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F4612F6-BBEE-42EE-8A2F-791DB1491926}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +50,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7CA8E943-A070-48AE-B9CE-065F5701624D} = {B67E3705-740A-46FB-AAC5-AB7151D1BABC}
 		{E46C90C3-9BDB-49D4-88FB-4BE360EC3036} = {B67E3705-740A-46FB-AAC5-AB7151D1BABC}
+		{9900AA10-6940-4A98-B005-3FCF27D92E07} = {7E292A04-846D-49D9-967A-280967160B1D}
+		{8F4612F6-BBEE-42EE-8A2F-791DB1491926} = {7E292A04-846D-49D9-967A-280967160B1D}
+		{FB9EEFB6-39DD-45E7-AB4C-EB3F7017B9F4} = {7E292A04-846D-49D9-967A-280967160B1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D700479-D124-4C31-A0B0-CB5CB45A33A6}
