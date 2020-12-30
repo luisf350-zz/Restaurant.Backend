@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.Account.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Account", "Account", "{B67E3705-740A-46FB-AAC5-AB7151D1BABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.Common", "Restaurant.Backend.Common\Restaurant.Backend.Common.csproj", "{9900AA10-6940-4A98-B005-3FCF27D92E07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Backend.CommonApi", "Restaurant.Backend.Common\Restaurant.Backend.CommonApi.csproj", "{9900AA10-6940-4A98-B005-3FCF27D92E07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
