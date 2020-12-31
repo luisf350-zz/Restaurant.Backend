@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
-namespace Restaurant.Backend.Common.Extensions
+namespace Restaurant.Backend.CommonApi.Extensions
 {
     public static class SwaggerExtension
     {

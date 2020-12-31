@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
-namespace Restaurant.Backend.Common.Extensions
+namespace Restaurant.Backend.CommonApi.Extensions
 {
     public static class JwtAuthenticationExtension
     {

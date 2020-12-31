@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Restaurant.Backend.Common\Restaurant.Backend.CommonApi.csproj" />
-    <ProjectReference Include="..\Restaurant.Backend.Domain\Restaurant.Backend.Domain.csproj" />
     <ProjectReference Include="..\Restaurant.Backend.Dto\Restaurant.Backend.Dto.csproj" />
   </ItemGroup>
 

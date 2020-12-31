@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Restaurant.Backend.Common.Middleware;
 
-namespace Restaurant.Backend.Common.Extensions
+namespace Restaurant.Backend.CommonApi.Extensions
 {
     public static class ExceptionHandlerExtensions
     {
