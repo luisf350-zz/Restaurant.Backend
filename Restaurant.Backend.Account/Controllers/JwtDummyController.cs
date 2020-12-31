@@ -2,13 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Restaurant.Backend.Common.Base;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.CommonApi.Utils;
 
 namespace Restaurant.Backend.Account.Controllers

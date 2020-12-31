@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Restaurant.Backend.Common.Base;
+using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.Domain.Contract;
 
 namespace Restaurant.Backend.Account.Controllers

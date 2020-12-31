@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Restaurant.Backend.Common.Base;
 using Restaurant.Backend.CommonApi.Utils;
 using Restaurant.Backend.Dto.Account;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Restaurant.Backend.CommonApi.Base;
 
 namespace Restaurant.Backend.Account.Controllers
 {

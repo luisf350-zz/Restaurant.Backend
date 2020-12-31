@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Restaurant.Backend.Common.Middleware;
+using Restaurant.Backend.CommonApi.Middleware;
 
 namespace Restaurant.Backend.CommonApi.Extensions
 {

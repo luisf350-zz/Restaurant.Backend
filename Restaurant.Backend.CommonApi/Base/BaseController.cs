@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Restaurant.Backend.Common.Base
+namespace Restaurant.Backend.CommonApi.Base
 {
     [Route("api/[controller]")]
     [ApiController]

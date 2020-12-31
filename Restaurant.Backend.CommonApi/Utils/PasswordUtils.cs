@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Backend.Common.Utils
+﻿namespace Restaurant.Backend.CommonApi.Utils
 {
     public static class PasswordUtils
     {
