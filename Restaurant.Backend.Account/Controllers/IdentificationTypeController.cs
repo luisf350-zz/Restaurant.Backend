@@ -35,12 +35,9 @@ namespace Restaurant.Backend.Account.Controllers
         {
             var resultType = await _identificationTypeDomain.Find(id);
 
-            if (resultType == null)
-            {
-                return NotFound(string.Format(Constants.NotFound, id));
-            }
-
-            return Ok(Mapper.Map<IdentificationTypeDto>(resultType));
+            return resultType == null ?
+                (IActionResult)NotFound(string.Format(Constants.NotFound, id))
+                : Ok(Mapper.Map<IdentificationTypeDto>(resultType));
         }
 
         [HttpPost("Create")]
@@ -79,6 +76,27 @@ namespace Restaurant.Backend.Account.Controllers
             var result = await _identificationTypeDomain.Update(model);
 
             return result ?
+                Ok(Mapper.Map<IdentificationTypeDto>(model))
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(IdentificationTypeDto modelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Constants.ModelNotValid);
+            }
+
+            var model = await _identificationTypeDomain.Find(modelDto.Id);
+            if (model == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, modelDto.Id));
+            }
+            
+            var result = await _identificationTypeDomain.Delete(model);
+
+            return result == 1 ?
                 Ok(Mapper.Map<IdentificationTypeDto>(model))
                 : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
