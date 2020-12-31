@@ -10,7 +10,7 @@ namespace Restaurant.Backend.Account.Controllers
     {
         private readonly IIdentificationTypeDomain _identificationTypeDomain;
 
-        public IdentificationTypeController(ILogger<CustomerController> logger, IIdentificationTypeDomain identificationTypeDomain) : base(logger)
+        public IdentificationTypeController(ILogger<IdentificationTypeController> logger, IIdentificationTypeDomain identificationTypeDomain) : base(logger)
         {
             _identificationTypeDomain = identificationTypeDomain;
         }
