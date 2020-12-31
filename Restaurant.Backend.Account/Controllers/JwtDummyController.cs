@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Restaurant.Backend.CommonApi.Utils;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -31,21 +32,9 @@ namespace Restaurant.Backend.Account.Controllers
                 new Claim(ClaimTypes.Name, $"{Guid.NewGuid()}")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = credentials
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = JwtCreation.CreateJwtToken(claims, _config.GetSection("AppSettings:Token").Value)
             });
         }
     }
