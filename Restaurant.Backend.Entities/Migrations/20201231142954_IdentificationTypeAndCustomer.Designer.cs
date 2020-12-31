@@ -10,7 +10,7 @@ using Restaurant.Backend.Entities.Context;
 namespace Restaurant.Backend.Entities.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201230233603_IdentificationTypeAndCustomer")]
+    [Migration("20201231142954_IdentificationTypeAndCustomer")]
     partial class IdentificationTypeAndCustomer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

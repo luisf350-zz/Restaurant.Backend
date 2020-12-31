@@ -55,6 +55,12 @@ namespace Restaurant.Backend.Entities.Migrations
                 table: "Customers",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_IdentificationTypes_Name",
+                table: "IdentificationTypes",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
