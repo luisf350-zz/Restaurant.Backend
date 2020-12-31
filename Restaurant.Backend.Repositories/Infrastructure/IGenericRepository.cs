@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.Repositories.Infrastructure
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : EntityBase
     {
         Task<IQueryable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
             params Expression<Func<T, object>>[] includes);

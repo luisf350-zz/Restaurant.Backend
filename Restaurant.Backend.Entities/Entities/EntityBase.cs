@@ -13,5 +13,7 @@ namespace Restaurant.Backend.Entities.Entities
 
         [Required]
         public DateTimeOffset CreationDate { get; set; }
+
+        public DateTimeOffset ModificationDate { get; set; }
     }
 }

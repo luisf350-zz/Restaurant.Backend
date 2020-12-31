@@ -10,7 +10,7 @@ using Restaurant.Backend.Entities.Context;
 namespace Restaurant.Backend.Entities.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201231142954_IdentificationTypeAndCustomer")]
+    [Migration("20201231174053_IdentificationTypeAndCustomer")]
     partial class IdentificationTypeAndCustomer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace Restaurant.Backend.Entities.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<DateTimeOffset>("ModificationDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -75,6 +78,9 @@ namespace Restaurant.Backend.Entities.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("ModificationDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.Domain.Implementation
 {
-    public class DomainBase<T> : IDomainBase<T> where T : class
+    public class DomainBase<T> : IDomainBase<T> where T : EntityBase
     {
         private readonly IGenericRepository<T> _repository;
 

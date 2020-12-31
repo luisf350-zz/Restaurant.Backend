@@ -4,24 +4,27 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.Repositories.Infrastructure
 {
-    public class GenericRepository<T> : IDisposable, IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IDisposable, IGenericRepository<T> where T : EntityBase
     {
         private readonly AppDbContext _context;
-
         private readonly DbSet<T> _dbSet;
+        private readonly ILogger _logger;
 
         private bool _disposed;
 
-        public GenericRepository(AppDbContext context)
+        public GenericRepository(AppDbContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
             _dbSet = context.Set<T>();
         }
 
-        public Task<IQueryable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
+        public Task<IQueryable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet;
@@ -52,11 +55,15 @@ namespace Restaurant.Backend.Repositories.Infrastructure
         {
             try
             {
+                entity.CreationDate = DateTimeOffset.UtcNow;
+                entity.ModificationDate = DateTimeOffset.MinValue;
+                
                 await _dbSet.AddAsync(entity);
                 return await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.InnerException?.Message ?? ex.Message, ex);
                 return 0;
             }
         }
@@ -65,12 +72,15 @@ namespace Restaurant.Backend.Repositories.Infrastructure
         {
             try
             {
+                entity.ModificationDate = DateTimeOffset.UtcNow;
+
                 _dbSet.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.InnerException?.Message ?? ex.Message, ex);
                 return false;
             }
         }
@@ -82,8 +92,9 @@ namespace Restaurant.Backend.Repositories.Infrastructure
                 _dbSet.Remove(entity);
                 return await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.InnerException?.Message ?? ex.Message, ex);
                 return 0;
             }
         }

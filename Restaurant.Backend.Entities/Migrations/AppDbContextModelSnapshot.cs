@@ -49,6 +49,9 @@ namespace Restaurant.Backend.Entities.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<DateTimeOffset>("ModificationDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -73,6 +76,9 @@ namespace Restaurant.Backend.Entities.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset>("ModificationDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()

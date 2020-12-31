@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.Domain.Contract
 {
-    public interface IDomainBase<T> where T : class
+    public interface IDomainBase<T> where T : EntityBase
     {
         Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
             params Expression<Func<T, object>>[] includes);

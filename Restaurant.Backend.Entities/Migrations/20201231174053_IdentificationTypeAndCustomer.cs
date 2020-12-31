@@ -14,7 +14,8 @@ namespace Restaurant.Backend.Entities.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModificationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +33,8 @@ namespace Restaurant.Backend.Entities.Migrations
                     LastName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModificationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {

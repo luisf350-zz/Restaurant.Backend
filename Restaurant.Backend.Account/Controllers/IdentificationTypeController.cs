@@ -8,6 +8,7 @@ using Restaurant.Backend.Dto.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -21,7 +22,7 @@ namespace Restaurant.Backend.Account.Controllers
             _identificationTypeDomain = identificationTypeDomain;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("GetAll", Name = "GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var resultTypes = await _identificationTypeDomain.GetAll();
@@ -29,7 +30,7 @@ namespace Restaurant.Backend.Account.Controllers
             return Ok(Mapper.Map<IList<IdentificationTypeDto>>(resultTypes));
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet("Get/{id}", Name = "Get")]
         public async Task<IActionResult> Get(Guid id)
         {
             var resultType = await _identificationTypeDomain.Find(id);
@@ -40,6 +41,46 @@ namespace Restaurant.Backend.Account.Controllers
             }
 
             return Ok(Mapper.Map<IdentificationTypeDto>(resultType));
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(IdentificationTypeDto modelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Constants.ModelNotValid);
+            }
+
+            var model = Mapper.Map<IdentificationType>(modelDto);
+            var result = await _identificationTypeDomain.Create(model);
+
+            return result == 0 ?
+                (IActionResult)BadRequest(Constants.OperationNotCompleted)
+                : Created("GetAll", modelDto);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(IdentificationTypeDto modelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Constants.ModelNotValid);
+            }
+
+            var model = await _identificationTypeDomain.Find(modelDto.Id);
+            if (model == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, modelDto.Id));
+            }
+
+            model.Name = modelDto.Name;
+            model.Description = modelDto.Description;
+
+            var result = await _identificationTypeDomain.Update(model);
+
+            return result ?
+                Ok(Mapper.Map<IdentificationTypeDto>(model))
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
     }
 }
