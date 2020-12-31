@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.CommonApi.Utils;
 using Restaurant.Backend.Dto.Account;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Restaurant.Backend.CommonApi.Base;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -15,7 +16,8 @@ namespace Restaurant.Backend.Account.Controllers
     {
         private readonly IConfiguration _config;
 
-        public CustomerController(ILogger<CustomerController> logger, IConfiguration config) : base(logger)
+        public CustomerController(ILogger<CustomerController> logger, IConfiguration config, IMapper mapper)
+            : base(logger, mapper)
         {
             _config = config;
         }

@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Backend.CommonApi.Enums
+﻿namespace Restaurant.Backend.Common.Enums
 {
     public enum Microservice
     {

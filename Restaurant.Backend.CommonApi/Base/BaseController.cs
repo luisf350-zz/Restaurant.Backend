@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,10 +11,12 @@ namespace Restaurant.Backend.CommonApi.Base
     public class BaseController : ControllerBase
     {
         protected readonly ILogger Logger;
-
-        public BaseController(ILogger logger)
+        protected readonly IMapper Mapper;
+        
+        public BaseController(ILogger logger, IMapper mapper)
         {
             Logger = logger;
+            Mapper = mapper;
         }
     }
 }

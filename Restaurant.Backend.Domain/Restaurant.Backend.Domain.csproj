@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Restaurant.Backend.Common\Restaurant.Backend.Common.csproj" />
+    <ProjectReference Include="..\Restaurant.Backend.Dto\Restaurant.Backend.Dto.csproj" />
     <ProjectReference Include="..\Restaurant.Backend.Repositories\Restaurant.Backend.Repositories.csproj" />
   </ItemGroup>
 

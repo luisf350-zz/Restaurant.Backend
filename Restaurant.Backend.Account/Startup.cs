@@ -1,10 +1,12 @@
+using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Restaurant.Backend.CommonApi.Enums;
+using Restaurant.Backend.Common.Enums;
 using Restaurant.Backend.CommonApi.Extensions;
 using Restaurant.Backend.Entities.Context;
 
@@ -37,6 +39,9 @@ namespace Restaurant.Backend.Account
 
             // Dependency Injection
             services.AddJwtAuthentication(Microservice.Account);
+
+            // Add AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

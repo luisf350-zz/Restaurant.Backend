@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.CommonApi.Utils;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -18,7 +16,8 @@ namespace Restaurant.Backend.Account.Controllers
     {
         private readonly IConfiguration _config;
 
-        public JwtDummyController(ILogger<CustomerController> logger, IConfiguration config) : base(logger)
+        public JwtDummyController(ILogger<CustomerController> logger, IConfiguration config, IMapper mapper)
+            : base(logger, mapper)
         {
             _config = config;
         }

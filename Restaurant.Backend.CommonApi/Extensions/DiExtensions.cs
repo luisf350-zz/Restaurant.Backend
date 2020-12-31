@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Backend.CommonApi.Enums;
+using Restaurant.Backend.Common.Enums;
 using Restaurant.Backend.Domain.Contract;
 using Restaurant.Backend.Domain.Implementation;
 using Restaurant.Backend.Repositories.Repositories;

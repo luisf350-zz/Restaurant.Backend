@@ -1,31 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Restaurant.Backend.Account.Controllers;
-using Restaurant.Backend.Domain.Contract;
 using Restaurant.Backend.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+
 namespace Restaurant.Backend.Account.Test
 {
-    public class IdentificationTypeControllerTest
+    public class IdentificationTypeControllerTest : BaseControllerTest<IdentificationTypeController>
     {
-        private Mock<ILogger<IdentificationTypeController>> _logger;
-        private Mock<IIdentificationTypeDomain> _identificationTypeDomain;
-
-        [SetUp]
-        public void Setup()
-        {
-            _logger = new Mock<ILogger<IdentificationTypeController>>();
-            _identificationTypeDomain = new Mock<IIdentificationTypeDomain>();
-        }
-
         [Test]
-        public void LoginTest()
+        public void GetAllTest()
         {
             // Setup
             var mockedResultList = new List<IdentificationType>
@@ -38,10 +27,10 @@ namespace Restaurant.Backend.Account.Test
                 }
             };
 
-            _identificationTypeDomain.Setup(x =>
+            IdentificationTypeDomain.Setup(x =>
                 x.GetAll(It.IsAny<Expression<Func<IdentificationType, bool>>>(), It.IsAny<Func<IQueryable<IdentificationType>, IOrderedQueryable<IdentificationType>>>(), It.IsAny<Expression<Func<IdentificationType, object>>[]>()))
                 .ReturnsAsync(mockedResultList);
-            var controller = new IdentificationTypeController(_logger.Object, _identificationTypeDomain.Object);
+            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain.Object, Mapper);
 
             // Act
             var result = controller.GetAll().Result;

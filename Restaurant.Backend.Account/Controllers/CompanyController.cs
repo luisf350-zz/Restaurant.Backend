@@ -7,6 +7,7 @@ using Restaurant.Backend.Dto.Account;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Restaurant.Backend.CommonApi.Base;
 
 namespace Restaurant.Backend.Account.Controllers
@@ -15,7 +16,8 @@ namespace Restaurant.Backend.Account.Controllers
     {
         private readonly IConfiguration _config;
 
-        public CompanyController(ILogger<CompanyController> logger, IConfiguration config) : base(logger)
+        public CompanyController(ILogger<CompanyController> logger, IConfiguration config, IMapper mapper) 
+            : base(logger, mapper)
         {
             _config = config;
         }
