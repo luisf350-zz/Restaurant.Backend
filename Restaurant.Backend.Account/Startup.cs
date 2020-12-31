@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Restaurant.Backend.Common.Extensions;
+using Restaurant.Backend.Domain.Contract;
+using Restaurant.Backend.Domain.Implementation;
 using Restaurant.Backend.Entities.Context;
+using Restaurant.Backend.Repositories.Repositories;
 
 namespace Restaurant.Backend.Account
 {
@@ -33,7 +36,10 @@ namespace Restaurant.Backend.Account
 
             // Set configuration for Entity Framework
             services.AddDbContext<AppDbContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); // TODO: Get token from KeyVault
+
+            services.AddScoped<IIdentificationTypeDomain, IdentificationTypeDomain>();
+            services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

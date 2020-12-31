@@ -23,9 +23,9 @@ namespace Restaurant.Backend.Account.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Working from Customer Controller");
+            return await Task.FromResult(Ok("Working from Company Controller"));
         }
 
         [AllowAnonymous]
