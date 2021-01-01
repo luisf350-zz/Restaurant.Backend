@@ -30,7 +30,7 @@ namespace Restaurant.Backend.Account.Controllers
             return Ok(Mapper.Map<IList<IdentificationTypeDto>>(resultTypes));
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet("Get/{id}", Name = "Get")]
         public async Task<IActionResult> Get(Guid id)
         {
             var resultType = await _identificationTypeDomain.Find(id);

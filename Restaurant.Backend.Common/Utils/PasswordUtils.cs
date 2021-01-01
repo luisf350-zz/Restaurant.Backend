@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Cryptography;
 
-namespace Restaurant.Backend.CommonApi.Utils
+namespace Restaurant.Backend.Common.Utils
 {
     public static class PasswordUtils
     {

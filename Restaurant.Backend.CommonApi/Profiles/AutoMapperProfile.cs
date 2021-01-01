@@ -8,6 +8,9 @@ namespace Restaurant.Backend.CommonApi.Profiles
     {
         public AutoMapperProfile()
         {
+            CreateMap<CustomerDto, Customer>();
+            CreateMap<Customer, CustomerDto>();
+
             CreateMap<IdentificationTypeDto, IdentificationType>();
             CreateMap<IdentificationType, IdentificationTypeDto>();
         }

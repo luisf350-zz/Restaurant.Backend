@@ -11,7 +11,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
 {
     public class GenericRepository<T> : IDisposable, IGenericRepository<T> where T : EntityBase
     {
-        private readonly AppDbContext _context;
+        protected readonly AppDbContext Context;
         private readonly DbSet<T> _dbSet;
         private readonly ILogger _logger;
 
@@ -19,7 +19,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
 
         public GenericRepository(AppDbContext context, ILogger logger)
         {
-            _context = context;
+            Context = context;
             _logger = logger;
             _dbSet = context.Set<T>();
         }
@@ -59,7 +59,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
                 entity.ModificationDate = DateTimeOffset.MinValue;
                 
                 await _dbSet.AddAsync(entity);
-                return await _context.SaveChangesAsync();
+                return await Context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
                 entity.ModificationDate = DateTimeOffset.UtcNow;
 
                 _dbSet.Update(entity);
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
             try
             {
                 _dbSet.Remove(entity);
-                return await _context.SaveChangesAsync();
+                return await Context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -103,7 +103,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
         {
             if (!_disposed && disposing)
             {
-                _context.Dispose();
+                Context.Dispose();
             }
             _disposed = true;
         }

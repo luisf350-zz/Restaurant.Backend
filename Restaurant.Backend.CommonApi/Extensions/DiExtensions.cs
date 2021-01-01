@@ -13,7 +13,10 @@ namespace Restaurant.Backend.CommonApi.Extensions
             switch (service)
             {
                 case Microservice.Account:
+                    services.AddScoped<ICustomerDomain, CustomerDomain>();
                     services.AddScoped<IIdentificationTypeDomain, IdentificationTypeDomain>();
+
+                    services.AddScoped<ICustomerRepository, CustomerRepository>();
                     services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
                     break;
             }
