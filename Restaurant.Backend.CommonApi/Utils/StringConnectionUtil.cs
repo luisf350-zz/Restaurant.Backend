@@ -2,13 +2,12 @@
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Threading.Tasks;
 
 namespace Restaurant.Backend.CommonApi.Utils
 {
     public static class StringConnectionUtil
     {
-        public static async Task<string> GetStringConnection(IConfiguration configuration)
+        public static string GetStringConnection(IConfiguration configuration)
         {
             var secret = configuration.GetSection("AppSettings:ConnectionStrings:Secret").Value;
 
@@ -26,7 +25,7 @@ namespace Restaurant.Backend.CommonApi.Utils
             var vaultUri = new Uri(configuration.GetSection("AppSettings:ConnectionStrings:VaultUri").Value);
 
             var client = new SecretClient(vaultUri: vaultUri, credential: new ClientSecretCredential(tenantId, clientId, clientSecret));
-            var connectionStringSecret = (await client.GetSecretAsync(secret)).Value;
+            var connectionStringSecret = (client.GetSecretAsync(secret).Result).Value;
 
             return connectionStringSecret.Value ?? throw new Exception("Missing String Connection");
         }

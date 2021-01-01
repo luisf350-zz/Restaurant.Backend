@@ -32,11 +32,11 @@ namespace Restaurant.Backend.Account
             services.AddSwaggerDocumentation();
 
             // Add JwtAuthentication
-            services.AddJwtAuthentication(JwtCreationUtil.GetJwtToken(Configuration).Result);
+            services.AddJwtAuthentication(JwtCreationUtil.GetJwtToken(Configuration));
 
             // Set configuration for Entity Framework
             services.AddDbContext<AppDbContext>
-                (options => options.UseSqlServer(StringConnectionUtil.GetStringConnection(Configuration).Result));
+                (options => options.UseSqlServer(StringConnectionUtil.GetStringConnection(Configuration)));
 
             // Dependency Injection
             services.AddJwtAuthentication(Microservice.Account);
@@ -48,7 +48,7 @@ namespace Restaurant.Backend.Account
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.AddSwagger();

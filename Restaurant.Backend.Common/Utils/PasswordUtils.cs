@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Restaurant.Backend.Common.Utils
 {
@@ -15,7 +16,7 @@ namespace Restaurant.Backend.Common.Utils
         public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512(passwordSalt);
-            var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return !computeHash.Where((t, i) => t != passwordHash[i]).Any();
         }
     }
