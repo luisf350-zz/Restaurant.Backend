@@ -1,22 +1,26 @@
-﻿using System.Linq;
-using System.Security.Cryptography;
-
-namespace Restaurant.Backend.CommonApi.Utils
+﻿namespace Restaurant.Backend.CommonApi.Utils
 {
     public static class PasswordUtils
     {
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using var hmac = new HMACSHA512();
+            using var hmac = new System.Security.Cryptography.HMACSHA512();
             passwordSalt = hmac.Key;
             passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         }
 
         public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using var hmac = new HMACSHA512(passwordSalt);
+            using var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt);
             var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            return !computeHash.Where((t, i) => t != passwordHash[i]).Any();
+            for (int i = 0; i < computeHash.Length; i++)
+            {
+                if (computeHash[i] != passwordHash[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
