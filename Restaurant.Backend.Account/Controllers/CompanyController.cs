@@ -40,7 +40,7 @@ namespace Restaurant.Backend.Account.Controllers
 
             return Ok(new
             {
-                token = JwtCreation.CreateJwtToken(claims, _config.GetSection("AppSettings:Token").Value)
+                token = JwtCreationUtil.CreateJwtToken(claims, _config)
             });
         }
     }
