@@ -17,14 +17,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IIS Express (Local)": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Local"
-      }
-    },
     "Restaurant.Backend.Account": {
       "commandName": "Project",
       "dotnetRunMessages": "true",

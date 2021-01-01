@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Restaurant.Backend.Common.Enums;
 using Restaurant.Backend.CommonApi.Extensions;
-using Restaurant.Backend.CommonApi.Utils;
 using Restaurant.Backend.Entities.Context;
 
 namespace Restaurant.Backend.Account
@@ -32,11 +31,11 @@ namespace Restaurant.Backend.Account
             services.AddSwaggerDocumentation();
 
             // Add JwtAuthentication
-            services.AddJwtAuthentication(JwtCreationUtil.GetJwtToken(Configuration).Result);
+            services.AddJwtAuthentication(Configuration.GetSection("AppSettings:Token").Value); // TODO: Get token from KeyVault
 
             // Set configuration for Entity Framework
             services.AddDbContext<AppDbContext>
-                (options => options.UseSqlServer(StringConnectionUtil.GetStringConnection(Configuration).Result));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); // TODO: Get token from KeyVault
 
             // Dependency Injection
             services.AddJwtAuthentication(Microservice.Account);
