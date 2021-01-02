@@ -23,6 +23,10 @@ namespace Restaurant.Backend.Domain.Implementation
             {
                 throw new Exception(Constants.LoginNotValid);
             }
+            if (!customer.Active)
+            {
+                throw new Exception(Constants.CustomerNotActive);
+            }
 
             return customer;
         }

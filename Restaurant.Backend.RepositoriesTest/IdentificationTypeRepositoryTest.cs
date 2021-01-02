@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using Restaurant.Backend.Entities.Context;
+﻿using NUnit.Framework;
 using Restaurant.Backend.Entities.Entities;
 using Restaurant.Backend.Repositories.Repositories;
 using System;
@@ -10,29 +6,14 @@ using System.Linq;
 
 namespace Restaurant.Backend.RepositoriesTest
 {
-    public class IdentificationTypeRepositoryTest
+    public class IdentificationTypeRepositoryTest : BaseRepositoryTest<IdentificationTypeRepository>
     {
-        private AppDbContext _context;
-        private Mock<ILogger<IdentificationTypeRepository>> _logger;
-
-        [SetUp]
-        public void Setup()
-        {
-            _logger = new Mock<ILogger<IdentificationTypeRepository>>();
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("Test")
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .Options;
-
-            _context = new AppDbContext(options);
-        }
-
         [Test]
         public void GetAllTest()
         {
             // Setup
             GenerateDbRecords(10);
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
 
             // Act
             var result = repository.GetAll().Result;
@@ -47,7 +28,7 @@ namespace Restaurant.Backend.RepositoriesTest
             // Setup
             var id = Guid.NewGuid();
             GenerateDbRecord(id, $"Name for {id}", $"Description for {id}");
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
 
             // Act
             var result = repository.GetById(id).Result;
@@ -61,7 +42,7 @@ namespace Restaurant.Backend.RepositoriesTest
         {
             // Setup
             var id = Guid.NewGuid();
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
 
             // Act
             var result = repository.GetById(id).Result;
@@ -82,7 +63,7 @@ namespace Restaurant.Backend.RepositoriesTest
                 Description = $"Description for {id}",
                 CreationDate = DateTimeOffset.UtcNow.AddDays(1).AddHours(2).AddMinutes(3)
             };
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
 
             // Act
             var result = repository.Create(model).Result;
@@ -105,7 +86,7 @@ namespace Restaurant.Backend.RepositoriesTest
             var id = Guid.NewGuid();
             const string newName = "Updated Name";
             GenerateDbRecord(id, $"Name for {id}", $"Description for {id}");
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
             var model = repository.GetById(id).Result;
             model.Name = newName;
             model.Description = string.Empty;
@@ -130,7 +111,7 @@ namespace Restaurant.Backend.RepositoriesTest
             // Setup
             var id = Guid.NewGuid();
             GenerateDbRecord(id, $"Name for {id}", $"Description for {id}");
-            var repository = new IdentificationTypeRepository(_context, _logger.Object);
+            var repository = new IdentificationTypeRepository(Context, Logger.Object);
             var model = repository.GetById(id).Result;
 
             // Act
@@ -149,7 +130,7 @@ namespace Restaurant.Backend.RepositoriesTest
             for (int i = 0; i < numberRecords; i++)
             {
                 var id = Guid.NewGuid();
-                _context.IdentificationTypes.Add(new IdentificationType
+                Context.IdentificationTypes.Add(new IdentificationType
                 {
                     Id = id,
                     Name = $"Name for {id}",
@@ -159,12 +140,12 @@ namespace Restaurant.Backend.RepositoriesTest
                 });
             }
 
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         private void GenerateDbRecord(Guid id, string name, string description)
         {
-            _context.IdentificationTypes.Add(new IdentificationType
+            Context.IdentificationTypes.Add(new IdentificationType
             {
                 Id = id,
                 Name = name,
@@ -173,7 +154,7 @@ namespace Restaurant.Backend.RepositoriesTest
                 ModificationDate = DateTimeOffset.MinValue
             });
 
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         #endregion

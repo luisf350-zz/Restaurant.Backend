@@ -9,7 +9,10 @@ namespace Restaurant.Backend.CommonApi.Profiles
         public AutoMapperProfile()
         {
             CreateMap<CustomerDto, Customer>();
-            CreateMap<Customer, CustomerDto>();
+            CreateMap<Customer, CustomerDto>()
+                .ForMember(dest=> dest.IdentificationTypeId, act=>act.MapFrom(src=>src.IdentificationType.Id))
+                .ForMember(dest => dest.IdentificationType, act => act.MapFrom(src => src.IdentificationType.Name));
+            ;
 
             CreateMap<IdentificationTypeDto, IdentificationType>();
             CreateMap<IdentificationType, IdentificationTypeDto>();

@@ -7,5 +7,6 @@
         public static string OperationNotCompleted => "The operation was not completed.";
         public static string LoginNotValid => "The Email and/or Password are not valid.";
         public static string EmailInUse => "The Email is in use already.";
+        public static string CustomerNotActive => "The Customer is not active.";
     }
 }

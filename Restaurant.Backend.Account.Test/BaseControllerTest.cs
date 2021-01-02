@@ -13,8 +13,10 @@ namespace Restaurant.Backend.Account.Test
     public class BaseControllerTest<T>
     {
         protected Mock<ILogger<T>> Logger;
+        protected Mock<ICustomerRepository> CustomerRepository;
         protected Mock<IIdentificationTypeRepository> IdentificationTypeRepository;
         protected Mock<IConfiguration> Config;
+        protected ICustomerDomain CustomerDomain;
         protected IIdentificationTypeDomain IdentificationTypeDomain;
         protected IMapper Mapper;
 
@@ -23,9 +25,11 @@ namespace Restaurant.Backend.Account.Test
         {
             Logger = new Mock<ILogger<T>>();
             IdentificationTypeRepository = new Mock<IIdentificationTypeRepository>();
+            CustomerRepository = new Mock<ICustomerRepository>();
             Config = new Mock<IConfiguration>();
 
             Config.Setup(x => x.GetSection("AppSettings:Token").Value).Returns("SuperSecretKey2020");
+            CustomerDomain = new CustomerDomain(CustomerRepository.Object);
             IdentificationTypeDomain = new IdentificationTypeDomain(IdentificationTypeRepository.Object);
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());

@@ -6,14 +6,15 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Restaurant.Backend.CommonApi.Utils
 {
     public static class JwtCreationUtil
     {
-        public static string CreateJwtToken(Claim[] claims, IConfiguration configuration)
+        public static async Task<string> CreateJwtToken(Claim[] claims, IConfiguration configuration)
         {
-            var jwtKey = GetJwtToken(configuration);
+            var jwtKey = await GetJwtToken(configuration);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
@@ -29,7 +30,7 @@ namespace Restaurant.Backend.CommonApi.Utils
             return tokenHandler.WriteToken(token);
         }
 
-        public static string GetJwtToken(IConfiguration configuration)
+        public static async Task<string> GetJwtToken(IConfiguration configuration)
         {
             var secret = configuration.GetSection("AppSettings:Jwt:Environment").Value;
             var jwtKey = configuration.GetSection("AppSettings:Jwt:Token").Value;
@@ -42,7 +43,7 @@ namespace Restaurant.Backend.CommonApi.Utils
                 var vaultUri = new Uri(configuration.GetSection("AppSettings:Jwt:VaultUri").Value);
 
                 var client = new SecretClient(vaultUri: vaultUri, credential: new ClientSecretCredential(tenantId, clientId, clientSecret));
-                var jwtKeySecret = (client.GetSecretAsync(secret).Result).Value;
+                var jwtKeySecret = (await client.GetSecretAsync(secret)).Value;
                 jwtKey = jwtKeySecret.Value;
             }
 

@@ -32,11 +32,11 @@ namespace Restaurant.Backend.Account
             services.AddSwaggerDocumentation();
 
             // Add JwtAuthentication
-            services.AddJwtAuthentication(JwtCreationUtil.GetJwtToken(Configuration));
+            services.AddJwtAuthentication(JwtCreationUtil.GetJwtToken(Configuration).Result);
 
             // Set configuration for Entity Framework
             services.AddDbContext<AppDbContext>
-                (options => options.UseSqlServer(StringConnectionUtil.GetStringConnection(Configuration)));
+                (options => options.UseSqlServer(StringConnectionUtil.GetStringConnection(Configuration).Result));
 
             // Dependency Injection
             services.AddJwtAuthentication(Microservice.Account);

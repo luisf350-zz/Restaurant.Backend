@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Restaurant.Backend.Dto.Entities
 {
@@ -11,6 +7,8 @@ namespace Restaurant.Backend.Dto.Entities
     {
         [Required]
         public Guid IdentificationTypeId { get; set; }
+
+        public string IdentificationType { get; set; }
 
         [Required]
         public long IdentificationNumber { get; set; }

@@ -33,7 +33,7 @@ namespace Restaurant.Backend.Account.Controllers
 
             return Ok(await Task.FromResult(new
             {
-                token = JwtCreationUtil.CreateJwtToken(claims, _config)
+                token = await JwtCreationUtil.CreateJwtToken(claims, _config)
             }));
         }
     }
