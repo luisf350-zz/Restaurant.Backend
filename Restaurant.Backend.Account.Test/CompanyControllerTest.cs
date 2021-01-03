@@ -11,7 +11,7 @@ namespace Restaurant.Backend.Account.Test
         public void LoginTest()
         {
             // Setup
-            var controller = new CompanyController(Logger.Object, Config.Object, Mapper);
+            var controller = new CompanyController(LoggerController.Object, Config.Object, Mapper);
 
             // Act
             var result = controller.Login(new CompanyLoginDto()).Result;

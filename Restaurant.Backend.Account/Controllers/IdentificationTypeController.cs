@@ -22,7 +22,7 @@ namespace Restaurant.Backend.Account.Controllers
             _identificationTypeDomain = identificationTypeDomain;
         }
 
-        [HttpGet("GetAll", Name = "GetAll")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var resultTypes = await _identificationTypeDomain.GetAll();

@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Restaurant.Backend.CommonApi.Utils
+namespace Restaurant.Backend.Common.Utils
 {
     public static class PasswordUtils
     {
@@ -18,6 +19,17 @@ namespace Restaurant.Backend.CommonApi.Utils
             using var hmac = new HMACSHA512(passwordSalt);
             var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return !computeHash.Where((t, i) => t != passwordHash[i]).Any();
+        }
+
+        public static string GenerateTempKey(string value)
+        {
+            var bytes = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(bytes);
+            }
+
+            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
         }
     }
 }

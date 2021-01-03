@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Moq;
 using NUnit.Framework;
 using Restaurant.Backend.Account.Controllers;
 using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
 using System;
+using System.Collections.Generic;
 
 
 namespace Restaurant.Backend.Account.Test
@@ -15,7 +15,8 @@ namespace Restaurant.Backend.Account.Test
         public void GetAllTest()
         {
             // Setup
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            GenerateDbRecords(10);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.GetAll().Result;
@@ -23,30 +24,27 @@ namespace Restaurant.Backend.Account.Test
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(OkObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as OkObjectResult)?.Value}");
+            Assert.AreSame(typeof(List<IdentificationTypeDto>), (result as OkObjectResult)?.Value.GetType());
+            Assert.AreEqual(10, ((result as OkObjectResult)?.Value as List<IdentificationTypeDto>)?.Count);
         }
 
         [Test]
         public void GetTest()
         {
             // Setup
-            var mockedResult = new IdentificationType
-            {
-                Id = Guid.NewGuid(),
-                Name = "Passport",
-                CreationDate = DateTimeOffset.Now.AddDays(-1).AddHours(-2).AddMinutes(-3)
-            };
+            var id = Guid.NewGuid();
+            GenerateDbRecord(id, "Passport", "Passport Description");
 
-            IdentificationTypeRepository.Setup(x => x.GetById(It.IsAny<Guid>())).ReturnsAsync(mockedResult);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
-            var result = controller.Get(Guid.NewGuid()).Result;
+            var result = controller.Get(id).Result;
 
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(OkObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as OkObjectResult)?.Value}");
+            Assert.AreSame(typeof(IdentificationTypeDto), (result as OkObjectResult)?.Value.GetType());
+            Assert.AreEqual(id, ((result as OkObjectResult)?.Value as IdentificationTypeDto)?.Id);
         }
 
         [Test]
@@ -60,8 +58,7 @@ namespace Restaurant.Backend.Account.Test
                 Description = string.Empty
             };
 
-            IdentificationTypeRepository.Setup(x => x.Create(It.IsAny<IdentificationType>())).ReturnsAsync(1);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.Create(modelDto).Result;
@@ -69,7 +66,6 @@ namespace Restaurant.Backend.Account.Test
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(CreatedResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as CreatedResult)?.Value}");
         }
 
         [Test]
@@ -83,15 +79,7 @@ namespace Restaurant.Backend.Account.Test
                 Description = string.Empty
             };
 
-            var mockedModel = new IdentificationType
-            {
-                Id = Guid.NewGuid(),
-                Name = "Passport",
-                Description = string.Empty
-            };
-
-            IdentificationTypeRepository.Setup(x => x.Update(mockedModel)).ReturnsAsync(false);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.Update(modelDto).Result;
@@ -99,37 +87,33 @@ namespace Restaurant.Backend.Account.Test
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(NotFoundObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as NotFoundObjectResult)?.Value}");
         }
 
         [Test]
         public void UpdateTest()
         {
             // Setup
+            var id = Guid.NewGuid();
+            GenerateDbRecord(id, "Passport", "Passport Description");
+
             var modelDto = new IdentificationTypeDto
             {
-                Id = Guid.NewGuid(),
-                Name = "Passport",
+                Id = id,
+                Name = "Updated Passport",
                 Description = string.Empty
             };
 
-            var mockedModel = new IdentificationType
-            {
-                Id = Guid.NewGuid(),
-                Name = "Passport",
-                Description = string.Empty
-            };
-
-            IdentificationTypeRepository.Setup(x => x.Update(mockedModel)).ReturnsAsync(true);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.Update(modelDto).Result;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreSame(typeof(NotFoundObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as NotFoundObjectResult)?.Value}");
+            Assert.AreSame(typeof(OkObjectResult), result.GetType());
+            Assert.AreSame(typeof(IdentificationTypeDto), (result as OkObjectResult)?.Value.GetType());
+            Assert.AreEqual(modelDto.Name, ((result as OkObjectResult)?.Value as IdentificationTypeDto)?.Name);
+            Assert.AreEqual(modelDto.Description, ((result as OkObjectResult)?.Value as IdentificationTypeDto)?.Description);
         }
 
         [Test]
@@ -143,8 +127,7 @@ namespace Restaurant.Backend.Account.Test
                 Description = string.Empty
             };
 
-            IdentificationTypeRepository.Setup(x => x.Delete(It.IsAny<IdentificationType>())).ReturnsAsync(0);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.Delete(modelDto).Result;
@@ -152,30 +135,22 @@ namespace Restaurant.Backend.Account.Test
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(NotFoundObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as NotFoundObjectResult)?.Value}");
         }
 
         [Test]
-        public void DeletedTest()
+        public void DeleteTest()
         {
             // Setup
+            var id = Guid.NewGuid();
+            GenerateDbRecord(id, "Passport", "Passport Description");
             var modelDto = new IdentificationTypeDto
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Name = "Passport",
                 Description = string.Empty
             };
 
-            var mockedModel = new IdentificationType
-            {
-                Id = Guid.NewGuid(),
-                Name = "Passport",
-                Description = string.Empty
-            };
-
-            IdentificationTypeRepository.Setup(x => x.GetById(modelDto.Id)).ReturnsAsync(mockedModel);
-            IdentificationTypeRepository.Setup(x => x.Delete(It.IsAny<IdentificationType>())).ReturnsAsync(1);
-            var controller = new IdentificationTypeController(Logger.Object, IdentificationTypeDomain, Mapper);
+            var controller = new IdentificationTypeController(LoggerController.Object, IdentificationTypeDomain, Mapper);
 
             // Act
             var result = controller.Delete(modelDto).Result;
@@ -183,7 +158,42 @@ namespace Restaurant.Backend.Account.Test
             // Assert
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(OkObjectResult), result.GetType());
-            Assert.IsNotEmpty($"{(result as OkObjectResult)?.Value}");
         }
+
+        #region Private methods
+
+        private void GenerateDbRecords(int numberRecords)
+        {
+            for (int i = 0; i < numberRecords; i++)
+            {
+                var id = Guid.NewGuid();
+                Context.IdentificationTypes.Add(new IdentificationType
+                {
+                    Id = id,
+                    Name = $"Name for {id}",
+                    Description = $"Description for {id}",
+                    CreationDate = DateTimeOffset.UtcNow.AddDays(i).AddHours(i).AddMinutes(i),
+                    ModificationDate = DateTimeOffset.MinValue
+                });
+            }
+
+            Context.SaveChanges();
+        }
+
+        private void GenerateDbRecord(Guid id, string name, string description)
+        {
+            Context.IdentificationTypes.Add(new IdentificationType
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                CreationDate = DateTimeOffset.UtcNow.AddDays(1).AddHours(2).AddMinutes(3),
+                ModificationDate = DateTimeOffset.MinValue
+            });
+
+            Context.SaveChanges();
+        }
+
+        #endregion
     }
 }

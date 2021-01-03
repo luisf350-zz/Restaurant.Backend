@@ -1,16 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Restaurant.Backend.Entities.Entities
+namespace Restaurant.Backend.Dto.Entities
 {
-    public class Customer : EntityBase
+    public class CustomerDto : EntityBase
     {
         [Required]
         public Guid IdentificationTypeId { get; set; }
 
-        [ForeignKey("IdentificationTypeId")]
-        public IdentificationType IdentificationType { get; set; }
+        public string IdentificationType { get; set; }
 
         [Required]
         public long IdentificationNumber { get; set; }
@@ -32,18 +30,10 @@ namespace Restaurant.Backend.Entities.Entities
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Email is not valid")]
         public string Email { get; set; }
 
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
-        public bool VerifiedPhoneNumber { get; set; }
-
-        public bool VerifiedEmail { get; set; }
+        public string Password { get; set; }
 
         public DateTime Birthday { get; set; }
 
         public short Gender { get; set; }
-
-        public bool Active { get; set; }
     }
 }

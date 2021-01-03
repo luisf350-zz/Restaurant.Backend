@@ -31,10 +31,10 @@ namespace Restaurant.Backend.Account.Controllers
                 new Claim(ClaimTypes.Name, $"{Guid.NewGuid()}")
             };
 
-            return Ok(new
+            return Ok(await Task.FromResult(new
             {
-                token = JwtCreationUtil.CreateJwtToken(claims, _config)
-            });
+                token = await JwtCreationUtil.CreateJwtToken(claims, _config)
+            }));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Restaurant.Backend.Repositories.Infrastructure
 
         Task<T> GetById(object id);
 
-        Task<IQueryable<T>> GetBy(Expression<Func<T, bool>> predicate);
+        Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes);
 
         Task<int> Create(T entity);
 
