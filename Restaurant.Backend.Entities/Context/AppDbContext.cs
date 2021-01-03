@@ -12,5 +12,7 @@ namespace Restaurant.Backend.Entities.Context
         public DbSet<IdentificationType> IdentificationTypes { get; set; }
 
         public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<ConfirmCustomer> ConfirmCustomers { get; set; }
     }
 }

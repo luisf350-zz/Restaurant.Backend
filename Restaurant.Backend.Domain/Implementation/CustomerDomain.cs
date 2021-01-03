@@ -17,7 +17,7 @@ namespace Restaurant.Backend.Domain.Implementation
 
         public async Task<Customer> Login(string email, string password)
         {
-            var customer = (await Repository.GetBy(x => x.Email == email)).FirstOrDefault();
+            var customer = (await Repository.GetAll(x => x.Email == email)).FirstOrDefault();
 
             if (customer == null || !PasswordUtils.VerifyPasswordHash(password, customer.PasswordHash, customer.PasswordSalt))
             {

@@ -46,9 +46,16 @@ namespace Restaurant.Backend.Repositories.Infrastructure
             return await _dbSet.FindAsync(id);
         }
 
-        public Task<IQueryable<T>> GetBy(Expression<Func<T, bool>> predicate)
+        public async Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
         {
-            return Task.FromResult(_dbSet.Where(predicate));
+            IQueryable<T> query = _dbSet.Where(filter);
+            if (includes.Any())
+            {
+                foreach (Expression<Func<T, object>> include in includes)
+                    query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<int> Create(T entity)

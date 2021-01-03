@@ -14,6 +14,8 @@ namespace Restaurant.Backend.Domain.Contract
 
         Task<T> Find(Guid id);
 
+        Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes);
+
         Task<int> Create(T entity);
 
         Task<bool> Update(T entity);

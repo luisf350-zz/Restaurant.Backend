@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Restaurant.Backend.Common.Constants;
+using Restaurant.Backend.Common.Utils;
 using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.CommonApi.Utils;
 using Restaurant.Backend.Domain.Contract;
 using Restaurant.Backend.Dto.Account;
 using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Restaurant.Backend.Common.Utils;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -22,12 +23,14 @@ namespace Restaurant.Backend.Account.Controllers
     {
         private readonly IConfiguration _config;
         private readonly ICustomerDomain _customerDomain;
+        private readonly IConfirmCustomerDomain _confirmCustomerDomain;
 
-        public CustomerController(ILogger<CustomerController> logger, IConfiguration config, IMapper mapper, ICustomerDomain customerDomain)
+        public CustomerController(ILogger<CustomerController> logger, IConfiguration config, IMapper mapper, ICustomerDomain customerDomain, IConfirmCustomerDomain confirmCustomerDomain)
             : base(logger, mapper)
         {
             _config = config;
             _customerDomain = customerDomain;
+            _confirmCustomerDomain = confirmCustomerDomain;
         }
 
         [HttpGet("GetAll")]
@@ -41,7 +44,7 @@ namespace Restaurant.Backend.Account.Controllers
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var resultType = await _customerDomain.Find(id);
+            var resultType = await _customerDomain.FirstOfDefaultAsync(x => x.Id == id, x => x.IdentificationType);
 
             return resultType == null ?
                 (IActionResult)NotFound(string.Format(Constants.NotFound, id))
@@ -69,27 +72,42 @@ namespace Restaurant.Backend.Account.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(CustomerDto customerDto)
         {
+            var dbCustomer = await _customerDomain.FirstOfDefaultAsync(x =>
+                x.Email.Equals(customerDto.Email, StringComparison.InvariantCultureIgnoreCase));
+
+            if (dbCustomer != null)
+            {
+                return BadRequest(Constants.EmailInUse);
+            }
+
             var customer = Mapper.Map<Customer>(customerDto);
 
             PasswordUtils.CreatePasswordHash(customerDto.Password, out var passwordHash, out var passwordSalt);
             customer.PasswordHash = passwordHash;
             customer.PasswordSalt = passwordSalt;
+            customer.Id = Guid.NewGuid();
+            customer.Active = true;
 
             var result = await _customerDomain.Create(customer);
 
-            return result == 0 ?
-                (IActionResult)BadRequest(Constants.OperationNotCompleted)
-                : Ok(customerDto);
+            if (result == 0)
+            {
+                return BadRequest(Constants.OperationNotCompleted);
+            }
+
+            await _confirmCustomerDomain.Create(new ConfirmCustomer
+            {
+                CustomerId = customer.Id,
+                UniqueEmailKey = PasswordUtils.GenerateTempKey(customer.Email),
+                ExpirationEmail = DateTimeOffset.UtcNow.AddMinutes(10)
+            });
+
+            return Ok(customerDto);
         }
 
         [HttpPut("Update")]
         public async Task<IActionResult> Update(CustomerDto modelDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(Constants.ModelNotValid);
-            }
-
             var model = await _customerDomain.Find(modelDto.Id);
             if (model == null)
             {
@@ -128,6 +146,39 @@ namespace Restaurant.Backend.Account.Controllers
 
             return result == 1 ?
                 Ok(Mapper.Map<CustomerDto>(model))
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(CustomerConfirmEmailDto confirmEmailDto)
+        {
+            var customerFromRepo = await _customerDomain.FirstOfDefaultAsync(x => x.Email == confirmEmailDto.Email);
+
+            if (customerFromRepo == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, confirmEmailDto.Email));
+            }
+
+            var customerCustomer =
+                await _confirmCustomerDomain.FirstOfDefaultAsync(x => x.CustomerId == customerFromRepo.Id);
+
+            if (customerCustomer == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, confirmEmailDto.Email));
+            }
+
+            if (!customerCustomer.UniqueEmailKey.Equals(confirmEmailDto.EmailKey, StringComparison.InvariantCulture) ||
+                DateTimeOffset.UtcNow > customerCustomer.ExpirationEmail)
+            {
+                return NotFound(Constants.SendNewKeyForActivation);
+            }
+
+            customerFromRepo.VerifiedEmail = true;
+            await _customerDomain.Update(customerFromRepo);
+
+            return await _customerDomain.Update(customerFromRepo) ?
+                Ok(confirmEmailDto)
                 : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
     }

@@ -14,9 +14,11 @@ namespace Restaurant.Backend.CommonApi.Extensions
             {
                 case Microservice.Account:
                     services.AddScoped<ICustomerDomain, CustomerDomain>();
+                    services.AddScoped<IConfirmCustomerDomain, ConfirmCustomerDomain>();
                     services.AddScoped<IIdentificationTypeDomain, IdentificationTypeDomain>();
 
                     services.AddScoped<ICustomerRepository, CustomerRepository>();
+                    services.AddScoped<IConfirmCustomerRepository, ConfirmCustomerRepository>();
                     services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
                     break;
             }

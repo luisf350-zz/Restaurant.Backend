@@ -18,14 +18,17 @@ namespace Restaurant.Backend.Account.Test
     {
         protected Mock<ILogger<TController>> LoggerController;
         protected ICustomerRepository CustomerRepository;
+        protected IConfirmCustomerRepository ConfirmCustomerRepository;
         protected IIdentificationTypeRepository IdentificationTypeRepository;
         protected Mock<IConfiguration> Config;
         protected ICustomerDomain CustomerDomain;
+        protected IConfirmCustomerDomain ConfirmCustomerDomain;
         protected IIdentificationTypeDomain IdentificationTypeDomain;
         protected IMapper Mapper;
         protected AppDbContext Context;
 
         protected Mock<ILogger<CustomerRepository>> CustomerRepositoryLogger;
+        protected Mock<ILogger<ConfirmCustomerRepository>> ConfirmCustomerRepositoryLogger;
         protected Mock<ILogger<IdentificationTypeRepository>> IdentificationTypeRepositoryLogger;
 
         [SetUp]
@@ -44,14 +47,17 @@ namespace Restaurant.Backend.Account.Test
 
             // Logger for Repositories
             CustomerRepositoryLogger = new Mock<ILogger<CustomerRepository>>();
+            ConfirmCustomerRepositoryLogger = new Mock<ILogger<ConfirmCustomerRepository>>();
             IdentificationTypeRepositoryLogger = new Mock<ILogger<IdentificationTypeRepository>>();
 
             // Repositories
             CustomerRepository = new CustomerRepository(Context, CustomerRepositoryLogger.Object);
+            ConfirmCustomerRepository = new ConfirmCustomerRepository(Context, ConfirmCustomerRepositoryLogger.Object);
             IdentificationTypeRepository = new IdentificationTypeRepository(Context, IdentificationTypeRepositoryLogger.Object);
 
             // Domains
             CustomerDomain = new CustomerDomain(CustomerRepository);
+            ConfirmCustomerDomain = new ConfirmCustomerDomain(ConfirmCustomerRepository);
             IdentificationTypeDomain = new IdentificationTypeDomain(IdentificationTypeRepository);
 
             // AutoMapper
@@ -61,14 +67,19 @@ namespace Restaurant.Backend.Account.Test
         [TearDown]
         public void TearDown()
         {
-            foreach (var customer in CustomerRepository.GetAll().Result)
+            foreach (var item in ConfirmCustomerRepository.GetAll().Result)
             {
-                CustomerRepository.Delete(customer);
+                ConfirmCustomerRepository.Delete(item);
             }
 
-            foreach (var customer in IdentificationTypeRepository.GetAll().Result)
+            foreach (var item in CustomerRepository.GetAll().Result)
             {
-                IdentificationTypeRepository.Delete(customer);
+                CustomerRepository.Delete(item);
+            }
+
+            foreach (var item in IdentificationTypeRepository.GetAll().Result)
+            {
+                IdentificationTypeRepository.Delete(item);
             }
         }
     }

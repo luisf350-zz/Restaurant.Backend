@@ -8,5 +8,6 @@
         public static string LoginNotValid => "The Email and/or Password are not valid.";
         public static string EmailInUse => "The Email is in use already.";
         public static string CustomerNotActive => "The Customer is not active.";
+        public static string SendNewKeyForActivation => "Please request new key for activation.";
     }
 }

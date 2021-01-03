@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Restaurant.Backend.Account.Controllers;
+using Restaurant.Backend.Common.Constants;
+using Restaurant.Backend.Dto.Account;
 using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Restaurant.Backend.Common.Constants;
-using Restaurant.Backend.Dto.Account;
 
 namespace Restaurant.Backend.Account.Test
 {
@@ -20,7 +19,7 @@ namespace Restaurant.Backend.Account.Test
         {
             // Setup
             GenerateDbRecords(10);
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.GetAll().Result;
@@ -39,7 +38,7 @@ namespace Restaurant.Backend.Account.Test
             var id = Guid.NewGuid();
             GenerateDbRecord(id, "test@mail.com");
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Get(id).Result;
@@ -62,10 +61,10 @@ namespace Restaurant.Backend.Account.Test
                 Password = "Password1"
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
-            var expectedException= Task.FromResult(controller.Login(model)).Result;
+            var expectedException = Task.FromResult(controller.Login(model)).Result;
 
             // Assert
             Assert.AreSame(Constants.LoginNotValid, expectedException.Exception?.InnerException?.Message);
@@ -82,14 +81,14 @@ namespace Restaurant.Backend.Account.Test
                 FirstName = $"First Name for {id}",
                 LastName = $"Last Name for {id}",
                 Birthday = new DateTime(2020, 01, 01),
-                Email = "email@mail.com",
+                Email = $"{id}@mail.com",
                 Password = "Password",
                 Gender = (short)new Random().Next(1, 2),
                 IdentificationNumber = new Random().Next(8000000, 1100000000),
                 PhoneNumber = new Random().Next(300000000, 326000000).ToString(),
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Create(modelDto).Result;
@@ -118,7 +117,7 @@ namespace Restaurant.Backend.Account.Test
                 PhoneNumber = new Random().Next(300000000, 326000000).ToString(),
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Create(modelDto).Result;
@@ -131,8 +130,7 @@ namespace Restaurant.Backend.Account.Test
 
             Assert.IsNotNull(result2);
             Assert.AreSame(typeof(BadRequestObjectResult), result2.GetType());
-            Assert.AreEqual(Constants.OperationNotCompleted, (result2 as BadRequestObjectResult)?.Value);
-            Assert.AreEqual(LogLevel.Error, CustomerRepositoryLogger.Invocations[0].Arguments[0]);
+            Assert.AreEqual(Constants.EmailInUse, (result2 as BadRequestObjectResult)?.Value);
         }
 
         [Test]
@@ -144,7 +142,7 @@ namespace Restaurant.Backend.Account.Test
                 Id = Guid.NewGuid(),
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Update(modelDto).Result;
@@ -182,7 +180,7 @@ namespace Restaurant.Backend.Account.Test
                 Password = "NotChange"
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Update(modelDto).Result;
@@ -210,7 +208,7 @@ namespace Restaurant.Backend.Account.Test
                 Id = Guid.NewGuid(),
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Delete(modelDto).Result;
@@ -231,7 +229,7 @@ namespace Restaurant.Backend.Account.Test
                 Id = id,
             };
 
-            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain, ConfirmCustomerDomain);
 
             // Act
             var result = controller.Delete(modelDto).Result;
