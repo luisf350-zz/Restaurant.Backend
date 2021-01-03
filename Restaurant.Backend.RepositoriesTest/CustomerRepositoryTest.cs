@@ -3,21 +3,21 @@ using Restaurant.Backend.Repositories.Repositories;
 using System;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Restaurant.Backend.Entities.Entities;
 
 namespace Restaurant.Backend.RepositoriesTest
 {
-    public class CustomerRepositoryTest : BaseRepositoryTest<CustomerRepository>
+    public class CustomerRepositoryTest : BaseRepositoryTest
     {
         [Test]
         public void GetAllTest()
         {
             // Setup
             GenerateDbRecords(10);
-            var repository = new CustomerRepository(Context, Logger.Object);
-
+            
             // Act
-            var result = repository.GetAll().Result;
+            var result = CustomerRepository.GetAll().Result;
 
             // Assert
             Assert.AreEqual(result.Count(), 10);
@@ -29,10 +29,9 @@ namespace Restaurant.Backend.RepositoriesTest
             // Setup
             var id = Guid.NewGuid();
             GenerateDbRecord(id, "email@mail.com");
-            var repository = new CustomerRepository(Context, Logger.Object);
 
             // Act
-            var result = repository.GetById(id).Result;
+            var result = CustomerRepository.GetById(id).Result;
 
             // Assert
             Assert.AreEqual(result.Id, id);
@@ -43,10 +42,9 @@ namespace Restaurant.Backend.RepositoriesTest
         {
             // Setup
             var id = Guid.NewGuid();
-            var repository = new CustomerRepository(Context, Logger.Object);
 
             // Act
-            var result = repository.GetById(id).Result;
+            var result = CustomerRepository.GetById(id).Result;
 
             // Assert
             Assert.IsNull(result);
@@ -83,11 +81,10 @@ namespace Restaurant.Backend.RepositoriesTest
                     ModificationDate = DateTimeOffset.MinValue
                 }
             };
-            var repository = new CustomerRepository(Context, Logger.Object);
 
             // Act
-            var result = repository.Create(model).Result;
-            var dbRecord = repository.GetById(model.Id).Result;
+            var result = CustomerRepository.Create(model).Result;
+            var dbRecord = CustomerRepository.GetById(model.Id).Result;
 
             // Assert
             Assert.AreEqual(2, result);
@@ -96,8 +93,6 @@ namespace Restaurant.Backend.RepositoriesTest
             Assert.AreEqual(dbRecord.Email, model.Email);
             Assert.AreEqual(dbRecord.CreationDate, model.CreationDate);
             Assert.AreEqual(dbRecord.ModificationDate, model.ModificationDate);
-
-            _ = repository.Delete(model).Result;
         }
 
         [Test]
@@ -105,7 +100,7 @@ namespace Restaurant.Backend.RepositoriesTest
         {
             // Setup
             var id = Guid.NewGuid();
-            var model1 = new Customer
+            var model = new Customer
             {
                 Id = id,
                 FirstName = $"First Name for {id}",
@@ -131,42 +126,15 @@ namespace Restaurant.Backend.RepositoriesTest
                     ModificationDate = DateTimeOffset.MinValue
                 }
             };
-            var model2 = new Customer
-            {
-                Id = id,
-                FirstName = $"First Name for {id}",
-                LastName = $"Last Name for {id}",
-                Birthday = new DateTime(2020, 01, 01),
-                CreationDate = DateTimeOffset.UtcNow.AddDays(1).AddHours(2).AddMinutes(3),
-                ModificationDate = DateTimeOffset.MinValue,
-                Email = "email@mail.com",
-                Gender = (short)new Random().Next(1, 2),
-                IdentificationNumber = new Random().Next(8000000, 1100000000),
-                PasswordHash = Encoding.ASCII.GetBytes("PasswordHash"),
-                PasswordSalt = Encoding.ASCII.GetBytes("PasswordSalt"),
-                PhoneNumber = new Random().Next(300000000, 326000000).ToString(),
-                VerifiedEmail = false,
-                VerifiedPhoneNumber = false,
-                Active = true,
-                IdentificationType = new IdentificationType
-                {
-                    Id = id,
-                    Name = $"Name for {id}",
-                    Description = $"Description for {id}",
-                    CreationDate = DateTimeOffset.UtcNow.AddDays(1).AddHours(2).AddMinutes(3),
-                    ModificationDate = DateTimeOffset.MinValue
-                }
-            };
-            var repository = new CustomerRepository(Context, Logger.Object);
 
             // Act
-            var result1 = repository.Create(model1).Result;
-            var result2 = repository.Create(model1).Result;
-            
-            // Assert
-            Assert.AreEqual(0, result2);
+            var result1 = CustomerRepository.Create(model).Result;
+            var result2 = CustomerRepository.Create(model).Result;
 
-            _ = repository.Delete(model1).Result;
+            // Assert
+            Assert.AreEqual(2, result1);
+            Assert.AreEqual(0, result2);
+            Assert.AreEqual(LogLevel.Error, CustomerRepositoryLogger.Invocations[0].Arguments[0]);
         }
 
         [Test]
@@ -176,13 +144,12 @@ namespace Restaurant.Backend.RepositoriesTest
             var id = Guid.NewGuid();
             const string newName = "Updated Name";
             GenerateDbRecord(id, "email@mail.com");
-            var repository = new CustomerRepository(Context, Logger.Object);
-            var model = repository.GetById(id).Result;
+            var model = CustomerRepository.GetById(id).Result;
             model.FirstName = newName;
 
             // Act
-            var result = repository.Update(model).Result;
-            var dbRecord = repository.GetById(model.Id).Result;
+            var result = CustomerRepository.Update(model).Result;
+            var dbRecord = CustomerRepository.GetById(model.Id).Result;
 
             // Assert
             Assert.IsTrue(result);
@@ -195,12 +162,11 @@ namespace Restaurant.Backend.RepositoriesTest
             // Setup
             var id = Guid.NewGuid();
             GenerateDbRecord(id, "email@mail.com");
-            var repository = new CustomerRepository(Context, Logger.Object);
-            var model = repository.GetById(id).Result;
+            var model = CustomerRepository.GetById(id).Result;
 
             // Act
-            var result = repository.Delete(model).Result;
-            var dbRecord = repository.GetById(model.Id).Result;
+            var result = CustomerRepository.Delete(model).Result;
+            var dbRecord = CustomerRepository.GetById(model.Id).Result;
 
             // Assert
             Assert.AreEqual(result, 1);

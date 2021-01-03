@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Restaurant.Backend.Dto.Entities
 {
-    public class CustomerDto
+    public class CustomerDto : EntityBase
     {
         [Required]
         public Guid IdentificationTypeId { get; set; }

@@ -45,7 +45,7 @@ namespace Restaurant.Backend.Account.Controllers
 
             return resultType == null ?
                 (IActionResult)NotFound(string.Format(Constants.NotFound, id))
-                : Ok(Mapper.Map<IdentificationTypeDto>(resultType));
+                : Ok(Mapper.Map<CustomerDto>(resultType));
         }
 
         [AllowAnonymous]
@@ -80,6 +80,55 @@ namespace Restaurant.Backend.Account.Controllers
             return result == 0 ?
                 (IActionResult)BadRequest(Constants.OperationNotCompleted)
                 : Ok(customerDto);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(CustomerDto modelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Constants.ModelNotValid);
+            }
+
+            var model = await _customerDomain.Find(modelDto.Id);
+            if (model == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, modelDto.Id));
+            }
+
+            model.IdentificationTypeId = modelDto.IdentificationTypeId;
+            model.IdentificationNumber = modelDto.IdentificationNumber;
+            model.FirstName = modelDto.FirstName;
+            model.LastName = modelDto.LastName;
+            model.Birthday = modelDto.Birthday;
+            model.Gender = modelDto.Gender;
+
+            var result = await _customerDomain.Update(model);
+
+            return result ?
+                Ok(Mapper.Map<CustomerDto>(model))
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(CustomerDto modelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Constants.ModelNotValid);
+            }
+
+            var model = await _customerDomain.Find(modelDto.Id);
+            if (model == null)
+            {
+                return NotFound(string.Format(Constants.NotFound, modelDto.Id));
+            }
+
+            var result = await _customerDomain.Delete(model);
+
+            return result == 1 ?
+                Ok(Mapper.Map<CustomerDto>(model))
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
     }
 }
