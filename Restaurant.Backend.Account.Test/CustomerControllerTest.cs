@@ -6,8 +6,10 @@ using Restaurant.Backend.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Restaurant.Backend.Common.Constants;
+using Restaurant.Backend.Dto.Account;
 
 namespace Restaurant.Backend.Account.Test
 {
@@ -46,6 +48,27 @@ namespace Restaurant.Backend.Account.Test
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(OkObjectResult), result.GetType());
             Assert.AreSame(typeof(CustomerDto), (result as OkObjectResult)?.Value.GetType());
+        }
+
+        [Test]
+        public void LoginTest()
+        {
+            // Setup
+            var id = Guid.NewGuid();
+            GenerateDbRecord(id, "test@mail.com");
+            var model = new CustomerLoginDto
+            {
+                Email = "test@mail.com",
+                Password = "Password1"
+            };
+
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+
+            // Act
+            var expectedException= Task.FromResult(controller.Login(model)).Result;
+
+            // Assert
+            Assert.AreSame(Constants.LoginNotValid, expectedException.Exception?.InnerException?.Message);
         }
 
         [Test]
