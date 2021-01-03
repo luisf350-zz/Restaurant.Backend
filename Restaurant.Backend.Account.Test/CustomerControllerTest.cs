@@ -6,6 +6,8 @@ using Restaurant.Backend.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Restaurant.Backend.Common.Constants;
 
 namespace Restaurant.Backend.Account.Test
 {
@@ -73,6 +75,41 @@ namespace Restaurant.Backend.Account.Test
             Assert.IsNotNull(result);
             Assert.AreSame(typeof(OkObjectResult), result.GetType());
             Assert.AreSame(typeof(CustomerDto), (result as OkObjectResult)?.Value.GetType());
+        }
+
+        [Test]
+        public void CreateDuplicateEmailTest()
+        {
+            // Setup
+            var id = Guid.NewGuid();
+            var modelDto = new CustomerDto
+            {
+                Id = id,
+                FirstName = $"First Name for {id}",
+                LastName = $"Last Name for {id}",
+                Birthday = new DateTime(2020, 01, 01),
+                Email = "email@mail.com",
+                Password = "Password",
+                Gender = (short)new Random().Next(1, 2),
+                IdentificationNumber = new Random().Next(8000000, 1100000000),
+                PhoneNumber = new Random().Next(300000000, 326000000).ToString(),
+            };
+
+            var controller = new CustomerController(LoggerController.Object, Config.Object, Mapper, CustomerDomain);
+
+            // Act
+            var result = controller.Create(modelDto).Result;
+            var result2 = controller.Create(modelDto).Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(typeof(OkObjectResult), result.GetType());
+            Assert.AreSame(typeof(CustomerDto), (result as OkObjectResult)?.Value.GetType());
+
+            Assert.IsNotNull(result2);
+            Assert.AreSame(typeof(BadRequestObjectResult), result2.GetType());
+            Assert.AreEqual(Constants.OperationNotCompleted, (result2 as BadRequestObjectResult)?.Value);
+            Assert.AreEqual(LogLevel.Error, CustomerRepositoryLogger.Invocations[0].Arguments[0]);
         }
 
         [Test]
