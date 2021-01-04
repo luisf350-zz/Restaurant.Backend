@@ -18,10 +18,9 @@ namespace Restaurant.Backend.Entities.Entities
 
         public DateTimeOffset ExpirationEmail { get; set; }
 
-        public int UniquePhoneKey { get; set; }
+        [MaxLength(150)]
+        public string UniquePhoneKey { get; set; }
 
-        public int PhoneActivationAttempt { get; set; }
 
-        public DateTimeOffset ExpirationPhone { get; set; }
     }
 }

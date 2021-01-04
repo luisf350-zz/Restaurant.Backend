@@ -9,5 +9,7 @@
         public static string EmailInUse => "The Email is in use already.";
         public static string CustomerNotActive => "The Customer is not active.";
         public static string SendNewKeyForActivation => "Please request new key for activation.";
+        public static string ErrorFromNexmo => "CustomerId={0}. PhoneNumber={1}. Error Message= {2}.";
+        public static string MissingNexmoKey => "The key for Nexmo is missing.";
     }
 }
