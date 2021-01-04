@@ -9,42 +9,43 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Backend.Domain.Implementation
 {
-    public class DomainBase<T> : IDomainBase<T> where T : EntityBase
+    public class DomainBase<TEntity> : IDomainBase<TEntity>
+        where TEntity : EntityBase
     {
-        protected readonly IGenericRepository<T> Repository;
+        protected readonly IGenericRepository<TEntity> Repository;
 
-        public DomainBase(IGenericRepository<T> repository)
+        public DomainBase(IGenericRepository<TEntity> repository)
         {
             Repository = repository;
         }
 
-        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, object>>[] includes)
         {
             return await Repository.GetAll(filter, orderBy, includes);
         }
 
-        public async Task<T> Find(Guid id)
+        public async Task<TEntity> Find(Guid id)
         {
             return await Repository.GetById(id);
         }
 
-        public async Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
+        public async Task<TEntity> FirstOfDefaultAsync(Expression<Func<TEntity, bool>> filter, params Expression<Func<TEntity, object>>[] includes)
         {
             return await Repository.FirstOfDefaultAsync(filter, includes);
         }
 
-        public async Task<int> Create(T entity)
+        public async Task<int> Create(TEntity entity)
         {
             return await Repository.Create(entity);
         }
 
-        public async Task<bool> Update(T entity)
+        public async Task<bool> Update(TEntity entity)
         {
             return await Repository.Update(entity);
         }
 
-        public async Task<int> Delete(T entity)
+        public async Task<int> Delete(TEntity entity)
         {
             return await Repository.Delete(entity);
         }

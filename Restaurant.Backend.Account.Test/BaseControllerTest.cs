@@ -56,7 +56,7 @@ namespace Restaurant.Backend.Account.Test
             IdentificationTypeRepository = new IdentificationTypeRepository(Context, IdentificationTypeRepositoryLogger.Object);
 
             // Domains
-            CustomerDomain = new CustomerDomain(CustomerRepository);
+            CustomerDomain = new CustomerDomain(CustomerRepository, null, ConfirmCustomerRepository);
             ConfirmCustomerDomain = new ConfirmCustomerDomain(ConfirmCustomerRepository);
             IdentificationTypeDomain = new IdentificationTypeDomain(IdentificationTypeRepository);
 

@@ -15,9 +15,7 @@ namespace Restaurant.Backend.Entities.Migrations
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UniqueEmailKey = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     ExpirationEmail = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    UniquePhoneKey = table.Column<int>(type: "int", nullable: false),
-                    PhoneActivationAttempt = table.Column<int>(type: "int", nullable: false),
-                    ExpirationPhone = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UniquePhoneKey = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ModificationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },

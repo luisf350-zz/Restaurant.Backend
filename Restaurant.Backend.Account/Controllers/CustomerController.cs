@@ -13,7 +13,6 @@ using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -73,7 +72,7 @@ namespace Restaurant.Backend.Account.Controllers
         public async Task<IActionResult> Create(CustomerDto customerDto)
         {
             var dbCustomer = await _customerDomain.FirstOfDefaultAsync(x =>
-                x.Email.Equals(customerDto.Email, StringComparison.InvariantCultureIgnoreCase));
+                x.Email.ToUpper() == customerDto.Email.ToUpper());
 
             if (dbCustomer != null)
             {
@@ -95,12 +94,17 @@ namespace Restaurant.Backend.Account.Controllers
                 return BadRequest(Constants.OperationNotCompleted);
             }
 
-            await _confirmCustomerDomain.Create(new ConfirmCustomer
+            Task confirmCustomerTask = _confirmCustomerDomain.Create(new ConfirmCustomer
             {
                 CustomerId = customer.Id,
                 UniqueEmailKey = PasswordUtils.GenerateTempKey(customer.Email),
                 ExpirationEmail = DateTimeOffset.UtcNow.AddMinutes(10)
             });
+
+            List<Task> taskList = new List<Task> { confirmCustomerTask };
+            // TODO: Add logic, in Task list, to send email for confirmation
+
+            await Task.WhenAll(taskList);
 
             return Ok(customerDto);
         }
@@ -179,6 +183,22 @@ namespace Restaurant.Backend.Account.Controllers
 
             return await _customerDomain.Update(customerFromRepo) ?
                 Ok(confirmEmailDto)
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
+        }
+
+        [HttpPost("ConfirmPhone")]
+        public async Task<IActionResult> ConfirmPhone(CustomerConfirmPhoneDto confirmPhoneDto)
+        {
+            return await _customerDomain.SendPhoneConfirmation(confirmPhoneDto) 
+                ? Ok()
+                : (IActionResult)BadRequest(Constants.OperationNotCompleted);
+        }
+
+        [HttpPost("VerifyConfirmPhone")]
+        public async Task<IActionResult> VerifyConfirmPhone(CustomerConfirmPhoneDto confirmPhoneDto)
+        {
+            return await _customerDomain.VerifyPhoneConfirmation(confirmPhoneDto)
+                ? Ok()
                 : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
     }

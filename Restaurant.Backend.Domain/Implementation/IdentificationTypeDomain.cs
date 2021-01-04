@@ -1,4 +1,5 @@
-﻿using Restaurant.Backend.Domain.Contract;
+﻿using Microsoft.Extensions.Logging;
+using Restaurant.Backend.Domain.Contract;
 using Restaurant.Backend.Entities.Entities;
 using Restaurant.Backend.Repositories.Repositories;
 

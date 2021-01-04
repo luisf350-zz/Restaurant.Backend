@@ -6,13 +6,25 @@ using Restaurant.Backend.Repositories.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Restaurant.Backend.Common.Notifications;
+using Restaurant.Backend.Dto.Account;
 
 namespace Restaurant.Backend.Domain.Implementation
 {
     public class CustomerDomain : DomainBase<Customer>, ICustomerDomain
     {
-        public CustomerDomain(ICustomerRepository repository) : base(repository)
+        private readonly ILogger<ICustomerDomain> _logger;
+        private readonly IConfirmCustomerRepository _confirmCustomerRepository;
+        private readonly IConfiguration _configuration;
+
+        public CustomerDomain(ICustomerRepository repository, ILogger<ICustomerDomain> logger, IConfirmCustomerRepository confirmCustomerRepository, IConfiguration configuration)
+            : base(repository)
         {
+            _logger = logger;
+            _confirmCustomerRepository = confirmCustomerRepository;
+            _configuration = configuration;
         }
 
         public async Task<Customer> Login(string email, string password)
@@ -29,6 +41,64 @@ namespace Restaurant.Backend.Domain.Implementation
             }
 
             return customer;
+        }
+
+        public async Task<bool> SendPhoneConfirmation(CustomerConfirmPhoneDto customerConfirmPhoneDto)
+        {
+            var confirmCustomer = await _confirmCustomerRepository.FirstOfDefaultAsync(x =>
+                x.CustomerId == customerConfirmPhoneDto.CustomerId);
+
+            if (confirmCustomer == null)
+            {
+                return false;
+            }
+
+            var apiKey = _configuration.GetSection("AppSettings:Nexmo:ApiKey").Value;
+            var apiSecret = _configuration.GetSection("AppSettings:Nexmo:ApiSecret").Value;
+
+            var verifyResponse = NexmoNotifications.SendNotification(apiKey, apiSecret, customerConfirmPhoneDto.PhoneNumber);
+
+            if (!string.IsNullOrEmpty(verifyResponse.error_text))
+            {
+                _logger.LogError(string.Format(Constants.ErrorFromNexmo, customerConfirmPhoneDto.CustomerId,
+                    customerConfirmPhoneDto.PhoneNumber, verifyResponse.error_text));
+                return false;
+            }
+
+            confirmCustomer.UniquePhoneKey = verifyResponse.request_id;
+            return await _confirmCustomerRepository.Update(confirmCustomer);
+        }
+
+        public async Task<bool> VerifyPhoneConfirmation(CustomerConfirmPhoneDto customerConfirmPhoneDto)
+        {
+            if (string.IsNullOrEmpty(customerConfirmPhoneDto.UniquePhoneKey))
+            {
+                throw new Exception(Constants.MissingNexmoKey);
+            }
+
+            var apiKey = _configuration.GetSection("AppSettings:Nexmo:ApiKey").Value;
+            var apiSecret = _configuration.GetSection("AppSettings:Nexmo:ApiSecret").Value;
+            var verifyResponse = NexmoNotifications.VerifyNotification(apiKey, apiSecret,
+                customerConfirmPhoneDto.UniquePhoneKey, customerConfirmPhoneDto.Code);
+
+            if (!string.IsNullOrEmpty(verifyResponse.error_text))
+            {
+                _logger.LogError(string.Format(Constants.ErrorFromNexmo, customerConfirmPhoneDto.CustomerId,
+                    customerConfirmPhoneDto.PhoneNumber, verifyResponse.error_text));
+                return false;
+            }
+
+            var confirmCustomer = await _confirmCustomerRepository.FirstOfDefaultAsync(
+                x => x.CustomerId == customerConfirmPhoneDto.CustomerId, x => x.Customer);
+
+            if (confirmCustomer == null)
+            {
+                throw new Exception(string.Format(Constants.NotFound, $"Confirm Customer CustomerId={customerConfirmPhoneDto.CustomerId}."));
+            }
+
+            confirmCustomer.Customer.VerifiedPhoneNumber = true;
+            return await _confirmCustomerRepository.Update(confirmCustomer);
+
         }
     }
 }

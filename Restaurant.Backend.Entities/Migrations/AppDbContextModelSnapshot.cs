@@ -34,22 +34,17 @@ namespace Restaurant.Backend.Entities.Migrations
                     b.Property<DateTimeOffset>("ExpirationEmail")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("ExpirationPhone")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<DateTimeOffset>("ModificationDate")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("PhoneActivationAttempt")
-                        .HasColumnType("int");
 
                     b.Property<string>("UniqueEmailKey")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("UniquePhoneKey")
-                        .HasColumnType("int");
+                    b.Property<string>("UniquePhoneKey")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
