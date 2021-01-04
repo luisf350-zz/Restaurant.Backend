@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Restaurant.Backend.CommonApi.Extensions
 {
@@ -59,10 +60,15 @@ namespace Restaurant.Backend.CommonApi.Extensions
             var assemblyVersion = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version;
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => 
+            app.UseSwaggerUI(c =>
+            {
+                // Collapse all tabs
+                c.DocExpansion(DocExpansion.None);
                 c.SwaggerEndpoint(
-                    "/swagger/v1/swagger.json", 
-                    $"{assemblyName ?? DEFAULT_NAME} v{assemblyVersion?.Major ?? 1}.{assemblyVersion?.Minor ?? 0}"));
+                    "/swagger/v1/swagger.json",
+                    $"{assemblyName ?? DEFAULT_NAME} v{assemblyVersion?.Major ?? 1}.{assemblyVersion?.Minor ?? 0}");
+            });
+
         }
     }
 }
