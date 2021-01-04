@@ -27,6 +27,7 @@ namespace Restaurant.Backend.Account
         {
             services.AddCors();
             services.AddControllers();
+            services.AddResponseCaching();
 
             // Swagger Documentation
             services.AddSwaggerDocumentation();
@@ -60,6 +61,7 @@ namespace Restaurant.Backend.Account
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseResponseCaching();
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()

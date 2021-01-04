@@ -14,5 +14,7 @@ namespace Restaurant.Backend.Entities.Context
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<ConfirmCustomer> ConfirmCustomers { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
     }
 }

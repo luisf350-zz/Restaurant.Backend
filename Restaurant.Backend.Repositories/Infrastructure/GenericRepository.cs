@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Restaurant.Backend.Entities.Context;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -66,6 +67,26 @@ namespace Restaurant.Backend.Repositories.Infrastructure
                 entity.ModificationDate = DateTimeOffset.MinValue;
                 
                 await _dbSet.AddAsync(entity);
+                return await Context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.InnerException?.Message ?? ex.Message, ex);
+                return 0;
+            }
+        }
+
+        public async Task<int> CreateBulk(List<T> entityList)
+        {
+            try
+            {
+                entityList.ForEach(entity =>
+                {
+                    entity.CreationDate = DateTimeOffset.UtcNow;
+                    entity.ModificationDate = DateTimeOffset.MinValue;
+                });
+                
+                await _dbSet.AddRangeAsync(entityList);
                 return await Context.SaveChangesAsync();
             }
             catch (Exception ex)

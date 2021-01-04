@@ -8,11 +8,14 @@ namespace Restaurant.Backend.CommonApi.Profiles
     {
         public AutoMapperProfile()
         {
+            CreateMap<CountryDto, Country>();
+            CreateMap<Country, CountryDto>();
+
             CreateMap<CustomerDto, Customer>()
                 .ForMember(dest => dest.IdentificationTypeId, act => act.MapFrom(src => src.IdentificationTypeId))
                 .ForMember(dest => dest.IdentificationType, act => act.Ignore());
             CreateMap<Customer, CustomerDto>()
-                .ForMember(dest=> dest.IdentificationTypeId, act=>act.MapFrom(src=>src.IdentificationType.Id))
+                .ForMember(dest => dest.IdentificationTypeId, act => act.MapFrom(src => src.IdentificationType.Id))
                 .ForMember(dest => dest.IdentificationType, act => act.MapFrom(src => src.IdentificationType.Name));
 
             CreateMap<IdentificationTypeDto, IdentificationType>();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace Restaurant.Backend.Repositories.Infrastructure
         Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes);
 
         Task<int> Create(T entity);
+
+        Task<int> CreateBulk(List<T> entityList);
 
         Task<bool> Update(T entity);
 
