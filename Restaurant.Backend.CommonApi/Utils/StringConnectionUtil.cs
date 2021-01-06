@@ -2,10 +2,12 @@
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Restaurant.Backend.CommonApi.Utils
 {
+    [ExcludeFromCodeCoverage]
     public static class StringConnectionUtil
     {
         public static async Task<string>GetStringConnection(IConfiguration configuration)

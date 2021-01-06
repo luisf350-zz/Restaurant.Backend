@@ -17,14 +17,15 @@ namespace Restaurant.Backend.Domain.Implementation
     {
         private readonly ILogger<ICustomerDomain> _logger;
         private readonly IConfirmCustomerRepository _confirmCustomerRepository;
-        private readonly IConfiguration _configuration;
+        private readonly INexmoNotifications _nexmoNotifications;
 
-        public CustomerDomain(ICustomerRepository repository, ILogger<ICustomerDomain> logger, IConfirmCustomerRepository confirmCustomerRepository, IConfiguration configuration)
+        public CustomerDomain(ICustomerRepository repository, ILogger<ICustomerDomain> logger, IConfirmCustomerRepository confirmCustomerRepository, 
+            INexmoNotifications nexmoNotifications)
             : base(repository)
         {
             _logger = logger;
             _confirmCustomerRepository = confirmCustomerRepository;
-            _configuration = configuration;
+            _nexmoNotifications = nexmoNotifications;
         }
 
         public async Task<Customer> Login(string email, string password)
@@ -43,6 +44,11 @@ namespace Restaurant.Backend.Domain.Implementation
             return customer;
         }
 
+        public async Task<bool> VerifyEmailConfirmation(Guid id)
+        {
+            return await _confirmCustomerRepository.ConfirEmailValidation(id);
+        }
+
         public async Task<bool> SendPhoneConfirmation(CustomerConfirmPhoneDto customerConfirmPhoneDto)
         {
             var confirmCustomer = await _confirmCustomerRepository.FirstOfDefaultAsync(x =>
@@ -53,10 +59,7 @@ namespace Restaurant.Backend.Domain.Implementation
                 return false;
             }
 
-            var apiKey = _configuration.GetSection("AppSettings:Nexmo:ApiKey").Value;
-            var apiSecret = _configuration.GetSection("AppSettings:Nexmo:ApiSecret").Value;
-
-            var verifyResponse = NexmoNotifications.SendNotification(apiKey, apiSecret, customerConfirmPhoneDto.PhoneNumber);
+            var verifyResponse = _nexmoNotifications.SendNotification(customerConfirmPhoneDto.PhoneNumber);
 
             if (!string.IsNullOrEmpty(verifyResponse.error_text))
             {
@@ -76,10 +79,7 @@ namespace Restaurant.Backend.Domain.Implementation
                 throw new Exception(Constants.MissingNexmoKey);
             }
 
-            var apiKey = _configuration.GetSection("AppSettings:Nexmo:ApiKey").Value;
-            var apiSecret = _configuration.GetSection("AppSettings:Nexmo:ApiSecret").Value;
-            var verifyResponse = NexmoNotifications.VerifyNotification(apiKey, apiSecret,
-                customerConfirmPhoneDto.UniquePhoneKey, customerConfirmPhoneDto.Code);
+            var verifyResponse = _nexmoNotifications.VerifyNotification(customerConfirmPhoneDto.UniquePhoneKey, customerConfirmPhoneDto.Code);
 
             if (!string.IsNullOrEmpty(verifyResponse.error_text))
             {

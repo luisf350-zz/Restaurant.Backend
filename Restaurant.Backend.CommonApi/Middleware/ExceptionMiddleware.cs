@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Restaurant.Backend.CommonApi.Middleware
 {
+    [ExcludeFromCodeCoverage]
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
@@ -43,6 +45,7 @@ namespace Restaurant.Backend.CommonApi.Middleware
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class ErrorDetails
     {
         public int StatusCode { get; set; }

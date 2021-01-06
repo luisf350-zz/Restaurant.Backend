@@ -6,11 +6,13 @@ using Microsoft.Extensions.Logging;
 using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.CommonApi.Utils;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Restaurant.Backend.Account.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [AllowAnonymous]
     public class JwtDummyController : BaseController
     {

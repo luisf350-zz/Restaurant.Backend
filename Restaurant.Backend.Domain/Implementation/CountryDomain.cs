@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Restaurant.Backend.Domain.Contract;
+using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
 using Restaurant.Backend.Repositories.Repositories;
+using RestSharp;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Restaurant.Backend.Dto.Entities;
-using RestSharp;
 
 namespace Restaurant.Backend.Domain.Implementation
 {

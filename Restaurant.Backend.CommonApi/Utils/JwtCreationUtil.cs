@@ -3,6 +3,7 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Backend.CommonApi.Utils
 {
+    [ExcludeFromCodeCoverage]
     public static class JwtCreationUtil
     {
         public static async Task<string> CreateJwtToken(Claim[] claims, IConfiguration configuration)

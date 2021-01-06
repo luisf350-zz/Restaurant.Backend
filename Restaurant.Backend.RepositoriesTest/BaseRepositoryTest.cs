@@ -11,15 +11,18 @@ namespace Restaurant.Backend.RepositoriesTest
     {
         protected AppDbContext Context;
         protected CustomerRepository CustomerRepository;
+        protected CountryRepository CountryRepository;
         protected IdentificationTypeRepository IdentificationTypeRepository;
 
         protected Mock<ILogger<CustomerRepository>> CustomerRepositoryLogger;
+        protected Mock<ILogger<CountryRepository>> CountryRepositoryLogger;
         protected Mock<ILogger<IdentificationTypeRepository>> IdentificationTypeRepositoryLogger;
 
         [SetUp]
         public void Setup()
         {
             CustomerRepositoryLogger = new Mock<ILogger<CustomerRepository>>();
+            CountryRepositoryLogger = new Mock<ILogger<CountryRepository>>();
             IdentificationTypeRepositoryLogger = new Mock<ILogger<IdentificationTypeRepository>>();
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("Test")
@@ -29,20 +32,26 @@ namespace Restaurant.Backend.RepositoriesTest
             Context = new AppDbContext(options);
 
             CustomerRepository = new CustomerRepository(Context, CustomerRepositoryLogger.Object);
+            CountryRepository = new CountryRepository(Context, CountryRepositoryLogger.Object);
             IdentificationTypeRepository = new IdentificationTypeRepository(Context, IdentificationTypeRepositoryLogger.Object);
         }
 
         [TearDown]
         public void TearDown()
         {
-            foreach (var customer in CustomerRepository.GetAll().Result)
+            foreach (var item in CustomerRepository.GetAll().Result)
             {
-                _ = CustomerRepository.Delete(customer);
+                _ = CustomerRepository.Delete(item);
             }
 
-            foreach (var identificationType in IdentificationTypeRepository.GetAll().Result)
+            foreach (var item in CountryRepository.GetAll().Result)
             {
-                _ = IdentificationTypeRepository.Delete(identificationType);
+                _ = CountryRepository.Delete(item);
+            }
+
+            foreach (var item in IdentificationTypeRepository.GetAll().Result)
+            {
+                _ = IdentificationTypeRepository.Delete(item);
             }
         }
 

@@ -279,7 +279,7 @@ namespace Restaurant.Backend.Account.Test
             }
         }
 
-        private void GenerateDbRecord(Guid id, string email)
+        private void GenerateDbRecord(Guid id, string email, string phoneNumber = null)
         {
             var identificationType = new IdentificationType
             {
@@ -306,7 +306,7 @@ namespace Restaurant.Backend.Account.Test
                 IdentificationNumber = new Random().Next(8000000, 1100000000),
                 PasswordHash = Encoding.ASCII.GetBytes("PasswordHash"),
                 PasswordSalt = Encoding.ASCII.GetBytes("PasswordSalt"),
-                PhoneNumber = new Random().Next(300000000, 326000000).ToString(),
+                PhoneNumber = phoneNumber ?? new Random().Next(300000000, 326000000).ToString(),
                 VerifiedEmail = false,
                 VerifiedPhoneNumber = false,
                 Active = true

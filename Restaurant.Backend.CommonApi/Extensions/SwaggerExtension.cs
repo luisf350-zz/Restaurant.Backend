@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -7,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Restaurant.Backend.CommonApi.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SwaggerExtension
     {
         private const string DEFAULT_NAME = "Restaurant Backend";

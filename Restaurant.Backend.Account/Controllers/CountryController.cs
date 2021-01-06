@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +6,9 @@ using Restaurant.Backend.CommonApi.Base;
 using Restaurant.Backend.Domain.Contract;
 using Restaurant.Backend.Dto.Entities;
 using Restaurant.Backend.Entities.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Restaurant.Backend.Account.Controllers
 {
@@ -46,7 +45,7 @@ namespace Restaurant.Backend.Account.Controllers
                 }
             });
 
-            var persistedCountries = await _countryDomain.Create(countryList);
+            await _countryDomain.Create(countryList);
             resultDb = await _countryDomain.GetAll();
 
             return Ok(Mapper.Map<IList<CountryDto>>(resultDb));

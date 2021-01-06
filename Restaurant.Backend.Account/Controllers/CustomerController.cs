@@ -157,15 +157,8 @@ namespace Restaurant.Backend.Account.Controllers
         [HttpPost("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(CustomerConfirmEmailDto confirmEmailDto)
         {
-            var customerFromRepo = await _customerDomain.FirstOfDefaultAsync(x => x.Email == confirmEmailDto.Email);
-
-            if (customerFromRepo == null)
-            {
-                return NotFound(string.Format(Constants.NotFound, confirmEmailDto.Email));
-            }
-
             var customerCustomer =
-                await _confirmCustomerDomain.FirstOfDefaultAsync(x => x.CustomerId == customerFromRepo.Id);
+                await _confirmCustomerDomain.FirstOfDefaultAsync(x => x.Customer.Email == confirmEmailDto.Email, x => x.Customer);
 
             if (customerCustomer == null)
             {
@@ -178,10 +171,7 @@ namespace Restaurant.Backend.Account.Controllers
                 return NotFound(Constants.SendNewKeyForActivation);
             }
 
-            customerFromRepo.VerifiedEmail = true;
-            await _customerDomain.Update(customerFromRepo);
-
-            return await _customerDomain.Update(customerFromRepo) ?
+            return await _customerDomain.VerifyEmailConfirmation(customerCustomer.CustomerId) ?
                 Ok(confirmEmailDto)
                 : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
@@ -189,7 +179,7 @@ namespace Restaurant.Backend.Account.Controllers
         [HttpPost("ConfirmPhone")]
         public async Task<IActionResult> ConfirmPhone(CustomerConfirmPhoneDto confirmPhoneDto)
         {
-            return await _customerDomain.SendPhoneConfirmation(confirmPhoneDto) 
+            return await _customerDomain.SendPhoneConfirmation(confirmPhoneDto)
                 ? Ok()
                 : (IActionResult)BadRequest(Constants.OperationNotCompleted);
         }
