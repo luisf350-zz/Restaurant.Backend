@@ -46,7 +46,7 @@ namespace Restaurant.Backend.Domain.Implementation
 
         public async Task<bool> VerifyEmailConfirmation(Guid id)
         {
-            return await _confirmCustomerRepository.ConfirEmailValidation(id);
+            return await _confirmCustomerRepository.ConfirmEmailValidation(id);
         }
 
         public async Task<bool> SendPhoneConfirmation(CustomerConfirmPhoneDto customerConfirmPhoneDto)

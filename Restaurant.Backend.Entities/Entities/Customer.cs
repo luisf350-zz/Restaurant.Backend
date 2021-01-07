@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -43,6 +44,8 @@ namespace Restaurant.Backend.Entities.Entities
         public DateTime Birthday { get; set; }
 
         public short Gender { get; set; }
+
+        public List<Address> Addresses { get; set; }
 
         public bool Active { get; set; }
     }

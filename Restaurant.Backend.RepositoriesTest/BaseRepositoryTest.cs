@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Restaurant.Backend.Entities.Context;
+using Restaurant.Backend.Entities.Entities;
 using Restaurant.Backend.Repositories.Repositories;
 
 namespace Restaurant.Backend.RepositoriesTest
@@ -11,11 +12,13 @@ namespace Restaurant.Backend.RepositoriesTest
     {
         protected AppDbContext Context;
         protected CustomerRepository CustomerRepository;
+        protected ConfirmCustomerRepository ConfirmCustomerRepository;
         protected CountryRepository CountryRepository;
         protected IdentificationTypeRepository IdentificationTypeRepository;
 
         protected Mock<ILogger<CustomerRepository>> CustomerRepositoryLogger;
         protected Mock<ILogger<CountryRepository>> CountryRepositoryLogger;
+        protected Mock<ILogger<ConfirmCustomerRepository>> ConfirmCustomerRepositoryLogger;
         protected Mock<ILogger<IdentificationTypeRepository>> IdentificationTypeRepositoryLogger;
 
         [SetUp]
@@ -23,6 +26,7 @@ namespace Restaurant.Backend.RepositoriesTest
         {
             CustomerRepositoryLogger = new Mock<ILogger<CustomerRepository>>();
             CountryRepositoryLogger = new Mock<ILogger<CountryRepository>>();
+            ConfirmCustomerRepositoryLogger = new Mock<ILogger<ConfirmCustomerRepository>>();
             IdentificationTypeRepositoryLogger = new Mock<ILogger<IdentificationTypeRepository>>();
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("Test")
@@ -32,6 +36,7 @@ namespace Restaurant.Backend.RepositoriesTest
             Context = new AppDbContext(options);
 
             CustomerRepository = new CustomerRepository(Context, CustomerRepositoryLogger.Object);
+            ConfirmCustomerRepository = new ConfirmCustomerRepository(Context, ConfirmCustomerRepositoryLogger.Object);
             CountryRepository = new CountryRepository(Context, CountryRepositoryLogger.Object);
             IdentificationTypeRepository = new IdentificationTypeRepository(Context, IdentificationTypeRepositoryLogger.Object);
         }
@@ -39,6 +44,11 @@ namespace Restaurant.Backend.RepositoriesTest
         [TearDown]
         public void TearDown()
         {
+            foreach (var item in ConfirmCustomerRepository.GetAll().Result)
+            {
+                _ = ConfirmCustomerRepository.Delete(item);
+            }
+
             foreach (var item in CustomerRepository.GetAll().Result)
             {
                 _ = CustomerRepository.Delete(item);

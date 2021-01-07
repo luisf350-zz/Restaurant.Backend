@@ -7,7 +7,7 @@ namespace Restaurant.Backend.Repositories.Repositories
 {
     public interface IConfirmCustomerRepository : IGenericRepository<ConfirmCustomer>
     {
-        Task<bool> ConfirEmailValidation(Guid customerId);
-        Task<bool> ConfirPhoneValidation(Guid customerId);
+        Task<bool> ConfirmEmailValidation(Guid customerId);
+        Task<bool> ConfirmPhoneValidation(Guid customerId);
     }
 }

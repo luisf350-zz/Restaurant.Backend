@@ -14,7 +14,7 @@ namespace Restaurant.Backend.Repositories.Repositories
         {
         }
 
-        public async Task<bool> ConfirEmailValidation(Guid customerId)
+        public async Task<bool> ConfirmEmailValidation(Guid customerId)
         {
             var customer = (await Context.Customers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == customerId));
             if (customer == null)
@@ -27,7 +27,7 @@ namespace Restaurant.Backend.Repositories.Repositories
             return true;
         }
 
-        public async Task<bool> ConfirPhoneValidation(Guid customerId)
+        public async Task<bool> ConfirmPhoneValidation(Guid customerId)
         {
             var customer = (await Context.Customers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == customerId));
             if (customer == null)
